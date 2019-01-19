@@ -126,3 +126,33 @@ ggplot(to_plot[, over := USD > 0], aes(x=name, y=USD, color=over)) +
 #6 Adjusted index
 #######################################################################
 
+#Only keep observations where we have GDP data
+
+big_mac_gdp_data = big_mac_data[GDP_dollar > 0]
+head(big_mac_gdp_data)
+regression_countries = c('ARG', 'AUS', 'BRA', 'GBR', 'CAN', 'CHL', 'CHN', 'CZE', 'DNK',
+                         'EGY', 'EUZ', 'HKG', 'HUN', 'IDN', 'ISR', 'JPN', 'MYS', 'MEX',
+                         'NZL', 'NOR', 'PER', 'PHL', 'POL', 'RUS', 'SAU', 'SGP', 'ZAF',
+                         'KOR', 'SWE', 'CHE', 'TWN', 'THA', 'TUR', 'USA', 'COL', 'PAK',
+                         'IND', 'AUT', 'BEL', 'NLD', 'FIN', 'FRA', 'DEU', 'IRL', 'ITA',
+                         'PRT', 'ESP', 'GRC', 'EST')
+
+#######################################################################
+#Check whether we are using all countries for regression for
+#which we also have GDP data
+
+test = as.data.table(big_mac_gdp_data[,(name)])
+test2=unique(test)
+
+rm(test, test2)
+
+#The answer is no. We only use a subset of countries. It is unclear
+#why we aren't using all.
+#######################################################################
+
+big_mac_gdp_data = big_mac_gdp_data[iso_a3 %in% regression_countries]
+
+ggplot(big_mac_gdp_data, aes(x=GDP_dollar, y=dollar_price)) +
+  facet_wrap(~date) +
+  geom_smooth(method = lm, color='tomato') +
+  geom_point(alpha=0.5)
