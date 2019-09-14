@@ -1,1 +1,1 @@
-# BigMac-Index
+# BigMac_Index
